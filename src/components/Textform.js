@@ -14,7 +14,7 @@ export default function Textform(props) {
       console.log("clicked")
       let newText=text.toLowerCase()
       setText(newText)
-      props.showAlert("converted to Lowwercase","success")
+      props.showAlert("converted to Lowercase","success")
 
           
   }
@@ -50,8 +50,13 @@ export default function Textform(props) {
         speak();
       }
     };
+    const handleCopy=()=>{
+      navigator.clipboard.writeText(text)
+      props.showAlert('text is copy','success')
+    }
    
-    const[text,setText]=useState("enter text here...")
+    const[text,setText]=useState("")
+    
   return (
     <>
     <div className='container'  style={{color: props.mode==='light'?'black':'white'}}>
@@ -63,11 +68,12 @@ export default function Textform(props) {
     
 
 </div>
-<button type="button" className="btn btn-primary mx-2" onClick={handleUPClick}>Change to Uppercase</button>
-<button type="button" className="btn btn-primary mx-2" onClick={handleDownClick}>Change to Lower case</button>
-<button type="submit" onClick={handleButtonClick} className="btn btn-primary mx-2 my-2">
+<button disabled={text.length===0} type="button" className="btn btn-primary mx-2" onClick={handleUPClick}>Change to Uppercase</button>
+<button disabled={text.length===0} type="button" className="btn btn-primary mx-2" onClick={handleDownClick}>Change to Lower case</button>
+<button disabled={text.length===0} type="submit" onClick={handleButtonClick} className="btn btn-primary mx-2 my-2">
 {speaking ? 'Stop Speaking' : 'Speak'}</button>
-<button type="button" className="btn btn-primary mx-2" onClick={handleClearClick} >Clear text</button>
+<button disabled={text.length===0} type="button" className="btn btn-primary mx-2" onClick={handleClearClick} >Clear text</button>
+<button disabled={text.length===0} type="button" className="btn btn-primary mx-2" onClick={handleCopy}>copy</button>
 
     </div>
     <div className='container my-3'  style={{color: props.mode==='light'?'black':'white'}}>
@@ -75,13 +81,13 @@ export default function Textform(props) {
             Text Summery
         </h1>
     <p>
-        total words in text is {text.split(' ').length} and total character in text are {text.length}
+        total words in text is {text.split(/\s+/).filter((element)=>{return element.length!==0}).length} and total character in text are {text.length}
     </p>
     <p>
-        {0.08 * text.split(' ').length} Minutes read time
+        {0.08 * text.split(' ').filter((element)=>{return element.length!==0}).length} Minutes read time
     </p>
     <h3>Preview</h3>
-    <p>{text}</p>
+    <p>{text.length>0?text:"nothing to preview"}</p>
     </div>
     </>
   )
